@@ -14,7 +14,7 @@ import numpy as np
 from models.vit import ViTModel
 from utils.metrics import matching_metrics
 from utils.logger import create_logger
-from utils.plot import plot_umap
+from utils.plot import plot_umap, plot_paired_umap
 
 
 def contrastive_loss(logits: torch.Tensor) -> torch.Tensor:
@@ -186,9 +186,6 @@ class CLIPModel(L.LightningModule):
             atac_embeds = self._get_batch_features(
                 dataloader, modality="atac", out_dir=out_dir
             )
-
-        if dataloader is not None:
-            
             loss, similarity = self.criterion(atac_embeds.X, rna_embeds.X)
             acc, match_score, foscttm = matching_metrics(similarity)
             # acc, match_score, foscttm = matching_metrics(
@@ -222,7 +219,7 @@ class CLIPModel(L.LightningModule):
                     metric="cosine",
                     save="_concat.png",
                 )
-                # plot_paired_umap(concat_embeds, color=celltype, save=os.path.join(out_dir, 'umap_concat.png'))
+                plot_paired_umap(concat_embeds, color=celltype, save=os.path.join(out_dir, 'umap_concat.png'))
             else:
                 plot_umap(
                     concat_embeds, color=cell_type, metric="cosine", save="_concat.png"

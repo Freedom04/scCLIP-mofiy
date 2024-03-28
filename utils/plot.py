@@ -82,9 +82,8 @@ def plot_paired_umap(
     save=None,
     n_neighbors=30,
     min_dist=0.5,
-    metric="euclidean",  #'correlation',
+    metric="euclidean",
     use_rep="X",
-    # **tl_kwargs,
     **pl_kwargs,
 ):
     sc.settings.set_figure_params(
@@ -107,19 +106,10 @@ def plot_paired_umap(
     )
     plt.subplots_adjust(wspace=wspace)
 
-    sc.pl.umap(adata, color="cell_type", ax=axs[0], show=False, legend_loc="on data")
-    sc.pl.umap(adata, color="modality", ax=axs[1], show=False)
-    concat = adata.obsm["X_umap"]
-    plt.plot(
-        concat[:, 0].reshape(2, -1),
-        concat[:, 1].reshape(2, -1),
-        color="gray",
-        linestyle="dashed",
-        linewidth=0.5,
-    )
-    plt.tight_layout()
+    sc.pl.umap(adata, color="modality", ax=axs[0], show=False)
+    sc.pl.umap(adata, color="cell_type", ax=axs[1], show=False)
 
     if save:
-        plt.savefig(save)
+        fig.savefig(save)
     else:
-        return plt.gcf()
+        return fig.gcf()
